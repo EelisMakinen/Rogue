@@ -1,13 +1,24 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using ZeroElectric.Vinculum;
 
 public class Game
 {
     private PlayerCharacter player;
     private Map level01;
 
+
+    const int screen_width = 240;
+    const int screen_height = 136;
+    Color bg_color = Raylib.YELLOW;
+
+
     public void Start()
     {
+        Raylib.InitWindow(screen_width, screen_height, "Raylib");
+        Raylib.SetTargetFPS(60);
+
+
+
+
         Console.CursorVisible = false;
 
         Initializemap();
@@ -21,18 +32,25 @@ public class Game
         player.position = new Point2D(level01.mapWidth / 2, level01.mapTiles.Length / level01.mapWidth / 2);
 
         bool isGameRunning = true;
-        while (isGameRunning)
+        while (isGameRunning && Raylib.WindowShouldClose() == false)
+
+
+
         {
+            Raylib.BeginDrawing();
             DrawLevel();
 
             Console.SetCursorPosition(player.position.x, player.position.y);
             player.Draw();
+            Raylib.EndDrawing();
 
             ConsoleKeyInfo inputKey = Console.ReadKey();
             HandlePlayerInput(inputKey, ref isGameRunning);
 
             Console.Clear();
+
         }
+        Raylib.CloseWindow();
     }
 
     private void Initializemap()
@@ -188,25 +206,15 @@ public class Game
 
     private void HandlePlayerInput(ConsoleKeyInfo key, ref bool isRunning)
     {
-        switch (key.Key)
+
         {
-            case ConsoleKey.UpArrow:
-                MovePlayer(0, -1);
-                break;
-            case ConsoleKey.DownArrow:
-                MovePlayer(0, 1);
-                break;
-            case ConsoleKey.LeftArrow:
-                MovePlayer(-1, 0);
-                break;
-            case ConsoleKey.RightArrow:
-                MovePlayer(1, 0);
-                break;
-            case ConsoleKey.Escape:
-                isRunning = false;
-                break;
-            default:
-                break;
+            if (Raylib.IsKeyPressed(KeyboardKey.KEY_UP)) { MovePlayer(0, -1); }
+            if (Raylib.IsKeyPressed(KeyboardKey.KEY_DOWN)) { MovePlayer(0, 1); }
+            if (Raylib.IsKeyPressed(KeyboardKey.KEY_LEFT)) { MovePlayer(-1, 0); }
+            if (Raylib.IsKeyPressed(KeyboardKey.KEY_RIGHT)) { MovePlayer(1, 0); }
+            if (Raylib.IsKeyPressed(KeyboardKey.KEY_ESCAPE)) ;
+
+
         }
     }
 
